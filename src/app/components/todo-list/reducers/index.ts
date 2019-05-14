@@ -56,6 +56,7 @@ export const _selectTodosFeature = createFeatureSelector<State>('todos');
 // helpoers
 // tslint:disable-next-line: variable-name
 export const { selectAll: _selectAllTodos } = adapter.getSelectors(_selectTodosFeature);
+// tslint:disable-next-line: variable-name
 export const _selectCompletedIds = createSelector(_selectTodosFeature, f => f.completedIds);
 // components
 // selector that returns TodoListItem[]
