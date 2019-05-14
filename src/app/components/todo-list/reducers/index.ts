@@ -1,6 +1,8 @@
-import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
+import * as actions from '../actions/list.actions';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { TodoListItem } from '../models';
+import { tassign } from 'tassign';
 
 export interface TodoEntity {
   id: string;
@@ -21,9 +23,22 @@ const initialState: State = {
   completedIds: ['1']
 };
 
-const adapter = createEntityAdapter<TodoEntity>();
-export function reducer(state: State = initialState, action: Action): State {
+export const adapter = createEntityAdapter<TodoEntity>();
+export function reducer(state: State = initialState, action: actions.All): State {
   switch (action.type) {
+    case actions.ITEM_ADDED_SUCCESS: {
+      const tempState = adapter.removeOne(action.oldId, state);
+      return adapter.addOne(action.item, tempState);
+    }
+    case actions.ITEM_ADDED: {
+      return adapter.addOne(action.item, state);
+    }
+    case actions.ITEM_COMPLETED: {
+      return tassign(state, {
+        completedIds:
+          [action.item.id, ...state.completedIds]
+      });
+    }
     default: {
       return state;
     }
